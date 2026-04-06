@@ -1,96 +1,106 @@
-# 🚀 Multi-Cloud Job Aggregator
+# 🚀 Multi-Cloud DevOps Job Aggregator
 
-A production-grade job aggregation platform deployed on Azure Container Apps.
-
----
-
-## 🧱 Architecture Overview
-
-* **Compute:** Azure Container Apps
-* **Registry:** Azure Container Registry (ACR)
-* **Identity:** User-Assigned Managed Identity (for secure ACR access)
-* **Database:** Azure PostgreSQL Flexible Server
-* **Infrastructure as Code:** Terraform (AzureRM provider)
-* **Containerization:** Docker
+A **production-grade, multi-cloud platform** that ingests, processes, and serves job listings across **AWS and Azure**, built with Infrastructure-as-Code, containerization, and CI/CD.
 
 ---
 
-## 🔐 Key Features
+## 💡 Project Overview
 
-* Secure image pulls using Managed Identity + ACR RBAC
-* Fully automated infrastructure using Terraform
-* Stateless API running on Azure Container Apps
-* Cloud-native architecture with least-privilege access
-* Containerized backend API
+This project demonstrates **real-world DevOps engineering** by designing and deploying a **scalable, secure, multi-cloud architecture**:
 
----
-
-## 🧩 Technical Challenges Solved
-
-### ✔ ACR Control Plane vs Data Plane RBAC
-
-* Implemented both:
-
-  * `AcrPull` (control plane)
-  * `acrpull` (data plane)
+* **AWS** → Serverless job ingestion (Lambda, API Gateway, DynamoDB)
+* **Azure** → Containerized API + frontend hosting (Container Apps, ACR, PostgreSQL)
+* **Terraform** → End-to-end infrastructure automation
+* **Docker + GitHub Actions** → CI/CD and container delivery
 
 ---
 
-### ✔ Container Apps Registry Identity
+## 🧱 Architecture (High Level)
 
-Configured registry access using managed identity:
-
-```hcl
-registry {
-  server   = azurerm_container_registry.acr.login_server
-  identity = azurerm_user_assigned_identity.api_identity.id
-}
+```text
+Job Sources → AWS Lambda → DynamoDB → (Data Pipeline) → Azure API → PostgreSQL → Frontend
 ```
 
----
+### 🔹 AWS Layer (Ingestion)
 
-### ✔ Terraform State Drift
+* Lambda functions scrape job data from external sources
+* API Gateway exposes ingestion endpoints
+* DynamoDB stores raw job data
+* S3 stores logs and artifacts
 
-* Resolved conflicts between manually created and Terraform-managed resources
+### 🔹 Azure Layer (Serving)
 
----
-
-### ✔ Image Pull Authentication Failures
-
-* Diagnosed and fixed `UNAUTHORIZED` errors
-* Root cause: missing data-plane RBAC permissions
-
----
-
-### ✔ Dependency Cycles
-
-* Eliminated Terraform circular dependencies
-* Stabilized resource creation order
+* Containerized API runs on Azure Container Apps
+* Azure Container Registry stores Docker images
+* PostgreSQL stores processed job listings
+* Static frontend hosted via Azure
 
 ---
 
-## 🚀 Deployment
+## 🔐 Key Highlights
 
-### Build and Push Image
+* ✅ **Multi-cloud architecture** (AWS + Azure integration)
+* ✅ **Secure container deployment** using Managed Identity + ACR RBAC
+* ✅ **Serverless ingestion pipeline** with AWS Lambda
+* ✅ **Containerized API** deployed via Azure Container Apps
+* ✅ **Hybrid database design** (DynamoDB + PostgreSQL)
+* ✅ **Fully automated infrastructure** using Terraform
+* ✅ **CI/CD pipeline** with GitHub Actions
+
+---
+
+## 🧩 Technical Impact
+
+### 🔹 Identity & Security
+
+* Implemented **least-privilege access** using IAM and Managed Identity
+* Solved ACR authentication using **control-plane + data-plane RBAC**
+
+---
+
+### 🔹 Infrastructure Automation
+
+* Built complete environments using **Terraform (AzureRM + AWS providers)**
+* Resolved **state drift and dependency cycles** in production workflows
+
+---
+
+### 🔹 Debugging & Reliability
+
+* Diagnosed and fixed:
+
+  * Container image pull failures (`UNAUTHORIZED`)
+  * Terraform dependency cycles
+  * Cross-cloud integration issues
+
+---
+
+### 🔹 CI/CD Engineering
+
+* Automated:
+
+  * Docker image build
+  * Push to Azure Container Registry
+  * Terraform deployment
+  * Container App updates
+
+---
+
+## 🚀 Deployment (Quick Start)
 
 ```bash
+# AWS Infrastructure
+cd terraform/aws
+terraform init && terraform apply
+
+# Azure Infrastructure
+cd terraform/azure
+terraform init && terraform apply
+
+# Build & Push API Image
 az acr build -t job-api:v1 -r jobaggregatoracr .
-```
 
----
-
-### Deploy Infrastructure
-
-```bash
-terraform init
-terraform apply
-```
-
----
-
-### View Logs
-
-```bash
+# View Logs
 az containerapp logs show \
   --name job-api \
   --resource-group rg-devops-job-aggregator \
@@ -99,39 +109,55 @@ az containerapp logs show \
 
 ---
 
-## 📂 Repository Structure
+## 📂 Project Structure
 
 ```text
 .
-├── api/                  # Backend API source code
-├── Dockerfile           # Container build instructions
+├── api/                     # Backend API
+├── frontend/                # Frontend UI
+├── Dockerfile               # Container build config
 ├── terraform/
-│   ├── main.tf          # Core Azure resources
-│   ├── variables.tf     # Input variables
-│   ├── outputs.tf       # Deployment outputs
-│   ├── providers.tf     # AzureRM provider configuration
-│   └── versions.tf      # Provider + Terraform version constraints
-└── README.md            # Project documentation
+│   ├── aws/                 # AWS infrastructure
+│   └── azure/               # Azure infrastructure
+├── .github/workflows/       # CI/CD pipelines
+└── README.md
 ```
 
 ---
 
-## 🧠 What I Learned
+## 🧠 Skills Demonstrated
 
-* How Azure Container Apps authenticates to ACR
-* The difference between control-plane and data-plane RBAC
-* Debugging identity and image pull failures
-* Designing secure cloud-native architectures
-* Managing Terraform state and avoiding drift
+* Multi-cloud architecture design (AWS + Azure)
+* Terraform (Infrastructure-as-Code)
+* Docker & container orchestration
+* Azure Container Apps & AWS Lambda
+* Identity & access management (IAM, Managed Identity, RBAC)
+* CI/CD with GitHub Actions
+* Debugging distributed cloud systems
 
 ---
 
-## 📌 Summary
+## 📈 Future Enhancements
 
-This project demonstrates real-world DevOps engineering practices, including:
+* Add job filtering (location, role, remote)
+* Implement autoscaling policies
+* Add monitoring (Azure Monitor + CloudWatch)
+* Introduce caching layer (Redis)
+* Add user authentication
 
-* Cloud architecture design
-* Identity and access management
-* Infrastructure automation
-* Debugging distributed systems
-* Building reliable, production-ready services
+---
+
+## 📌 Why This Project Matters
+
+This project reflects **real-world DevOps challenges and solutions**, including:
+
+* Designing **secure, scalable cloud systems**
+* Managing **cross-cloud infrastructure**
+* Automating deployments end-to-end
+* Debugging complex distributed environments
+
+---
+
+## 👤 Olaitan Soyoye
+
+
