@@ -26,8 +26,9 @@ jobs:
 
     - name: Docker Login to ACR
       run: |
-        echo ${{ secrets.ACR_PASSWORD }} | docker login \
-          --username ${{ secrets.ACR_USERNAME }} --password-stdin ${{ secrets.ACR_LOGIN_SERVER }}
+        docker login -u ${{ secrets.ACR_USERNAME }} \
+          -p ${{ secrets.ACR_PASSWORD }} \
+           ${{ secrets.ACR_LOGIN_SERVER }}
   
 
     - name: Build Docker image (amd64)
