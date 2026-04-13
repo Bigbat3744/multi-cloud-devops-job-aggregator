@@ -42,7 +42,29 @@ jobs:
       run: |
         IMAGE_TAG=${{ github.sha }}
         docker push ${{ secrets.ACR_LOGIN_SERVER }}/job-aggregator-api:$IMAGE_TAG
-        docker push ${{ secrets.ACR_LOGIN_SERVER }}/job-aggregator-api:${{ env.VERSION }
+        docker push ${{ secrets.ACR_LOGIN_SERVER }}/job-aggregator-api:${{ env.VERSION }}
+
+ 	 🚀 Deploy to STAGING (change here)
+    - name: Deploy to staging
+      run: |
+        IMAGE_TAG=${{ github.sha }}
+        az containerapp update \
+          --name job-api-staging \
+          --resource-group ${{ secrets.RESOURCE_GROUP }} \
+          --image ${{ secrets.ACR_LOGIN_SERVER }}/job-aggregator-api:$IMAGE_TAG
+
+     # ⏳ Wait
+    - name: Wait for app to start
+      run: sleep 20
+
+     # ❤️ Health check
+    - name: Health check
+      run: |
+        STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://<staging-url>/health)
+        if [ "$STATUS" -ne 200 ]; then
+          echo "Health check failed"
+          exit 1
+        fi
 
     # 🚀 Deploy to STAGING (change here)
     - name: Deploy to staging
