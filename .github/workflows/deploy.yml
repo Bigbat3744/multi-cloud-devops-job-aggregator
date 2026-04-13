@@ -1,0 +1,43 @@
+name: Deploy Azure Job API
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Azure Login
+      uses: azure/login@v2
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Docker Login to ACR
+      run: |
+        echo ${{ secrets.ACR_PASSWORD }} | docker login ${{ secrets.ACR_LOGIN_SERVER }} \
+          --username ${{ secrets.ACR_USERNAME }} --password-stdin
+
+    - name: Build Docker image (amd64)
+      run: |
+        IMAGE_TAG=${{ github.sha }}
+        docker build --platform linux/amd64 -t ${{ secrets.ACR_LOGIN_SERVER }}/job-aggregator-api:$IMAGE_TAG .
+
+    - name: Push image to ACR
+      run: |
+        IMAGE_TAG=${{ github.sha }}
+        docker push ${{ secrets.ACR_LOGIN_SERVER }}/job-aggregator-api:$IMAGE_TAG
+
+    - name: Deploy to Azure Container Apps
+      run: |
+        IMAGE_TAG=${{ github.sha }}
+        az containerapp update \
+          --name ${{ secrets.CONTAINERAPP_NAME }} \
+          --resource-group ${{ secrets.RESOURCE_GROUP }} \
+          --image ${{ secrets.ACR_LOGIN_SERVER }}/job-aggregator-api:$IMAGE_TAG
+

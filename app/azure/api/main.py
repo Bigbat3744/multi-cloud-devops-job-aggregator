@@ -1,44 +1,24 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
-import psycopg2
+import boto3
 import os
 
 app = FastAPI()
 
-# Pydantic model for incoming job data
-class Job(BaseModel):
-    title: str
-    company: str
-    location: str
-    source: str
-    scraped_at: str
+dynamodb = boto3.resource(
+    "dynamodb",
+    region_name="eu-west-1",
+    aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY")
+)
 
-def get_db_connection():
-    return psycopg2.connect(
-        host=os.getenv("DB_HOST"),
-        database=os.getenv("DB_NAME"),
-        user=os.getenv("DB_USER"),
-        password=os.getenv("DB_PASSWORD"),
-        port="5432"
-    )
+table = dynamodb.Table("job-aggregator-jobs")
 
 @app.get("/")
-def root():
-    return {"message": "Azure API is running"}
+def health():
+    return {"status": "ok", "service": "azure-job-api"}
 
-@app.post("/jobs")
-def insert_job(job: Job):
-    conn = get_db_connection()
-    cur = conn.cursor()
-
-    cur.execute("""
-        INSERT INTO jobs (title, company, location, source, scraped_at)
-        VALUES (%s, %s, %s, %s, %s)
-    """, (job.title, job.company, job.location, job.source, job.scraped_at))
-
-    conn.commit()
-    cur.close()
-    conn.close()
-
-    return {"status": "success"}
+@app.get("/jobs")
+def get_jobs():
+    response = table.scan()
+    return response.get("Items", [])
 
