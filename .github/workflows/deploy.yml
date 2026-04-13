@@ -22,7 +22,7 @@ jobs:
       run: |
         docker login -u ${{ secrets.ACR_USERNAME }} \
           -p ${{ secrets.ACR_PASSWORD }} \
-           ${{ secrets.ACR_LOGIN_SERVER }}
+          ${{ secrets.ACR_LOGIN_SERVER }}
   
 
     - name: Build Docker image (amd64)
