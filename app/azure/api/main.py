@@ -2,6 +2,16 @@ from fastapi import FastAPI
 import boto3
 import os
 
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # allow all origins for now
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app = FastAPI()
 
 dynamodb = boto3.resource(
