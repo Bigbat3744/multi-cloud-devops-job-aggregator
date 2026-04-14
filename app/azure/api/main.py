@@ -13,7 +13,7 @@ dynamodb = boto3.resource(
 
 table = dynamodb.Table("job-aggregator-jobs")
 
-@app.get("/")
+@app.get("/health")
 def health():
     return {"status": "ok", "service": "azure-job-api"}
 
