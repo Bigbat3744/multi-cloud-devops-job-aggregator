@@ -60,11 +60,12 @@ jobs:
     # ❤️ Health check
     - name: Health check
       run: |
-        STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://https://job-api-staging.whitehill-6fa48b06.uksouth.azurecontainerapps.io/health)
+        STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://job-api-staging.whitehill-6fa48b06.uksouth.azurecontainerapps.io/health)
         if [ "$STATUS" -ne 200 ]; then
           echo "Health check failed"
           exit 1
         fi
+
 
     # 🚀 Promote to PRODUCTION (only if staging passed)
     - name: Deploy to production
