@@ -1,163 +1,139 @@
-# 🚀 Multi-Cloud DevOps Job Aggregator
+# 🌐 Multi‑Cloud Job Aggregator — Azure Container Apps + AWS DynamoDB + S3 Frontend
 
-A **production-grade, multi-cloud platform** that ingests, processes, and serves job listings across **AWS and Azure**, built with Infrastructure-as-Code, containerization, and CI/CD.
-
----
-
-## 💡 Project Overview
-
-This project demonstrates **real-world DevOps engineering** by designing and deploying a **scalable, secure, multi-cloud architecture**:
-
-* **AWS** → Serverless job ingestion (Lambda, API Gateway, DynamoDB)
-* **Azure** → Containerized API + frontend hosting (Container Apps, ACR, PostgreSQL)
-* **Terraform** → End-to-end infrastructure automation
-* **Docker + GitHub Actions** → CI/CD and container delivery
+A production‑grade, multi‑cloud job aggregation platform designed and built to demonstrate real DevOps engineering capability.  
+This project integrates **Azure Container Apps**, **AWS DynamoDB**, **AWS S3**, and a **FastAPI backend** to deliver a scalable, cost‑efficient job search experience.
 
 ---
 
-## 🧱 Architecture (High Level)
+## 🚀 Overview
 
-```text
-Job Sources → AWS Lambda → DynamoDB → (Data Pipeline) → Azure API → PostgreSQL → Frontend
-```
+This application aggregates job listings from external sources, stores them in DynamoDB, and exposes them through a FastAPI backend deployed on Azure Container Apps.  
+A lightweight, responsive frontend is hosted on AWS S3 and communicates directly with the backend API.
 
-### 🔹 AWS Layer (Ingestion)
-
-* Lambda functions scrape job data from external sources
-* API Gateway exposes ingestion endpoints
-* DynamoDB stores raw job data
-* S3 stores logs and artifacts
-
-### 🔹 Azure Layer (Serving)
-
-* Containerized API runs on Azure Container Apps
-* Azure Container Registry stores Docker images
-* PostgreSQL stores processed job listings
-* Static frontend hosted via Azure
+The architecture is intentionally multi‑cloud to reflect modern distributed systems and real‑world DevOps workflows.
 
 ---
 
-## 🔐 Key Highlights
+## 🏗️ Architecture
 
-* ✅ **Multi-cloud architecture** (AWS + Azure integration)
-* ✅ **Secure container deployment** using Managed Identity + ACR RBAC
-* ✅ **Serverless ingestion pipeline** with AWS Lambda
-* ✅ **Containerized API** deployed via Azure Container Apps
-* ✅ **Hybrid database design** (DynamoDB + PostgreSQL)
-* ✅ **Fully automated infrastructure** using Terraform
-* ✅ **CI/CD pipeline** with GitHub Actions
+### **Frontend**
+- Static HTML/CSS/JavaScript
+- Hosted on **AWS S3 Static Website Hosting**
+- CORS‑enabled for cross‑origin API access
+- Clean, minimal UI for job search and display
 
----
+### **Backend**
+- **FastAPI** application
+- Deployed on **Azure Container Apps**
+- CORS middleware configured for secure cross‑origin requests
+- `/jobs` endpoint returns job listings from DynamoDB
+- `/health` endpoint for monitoring and readiness checks
 
-## 🧩 Technical Impact
-
-### 🔹 Identity & Security
-
-* Implemented **least-privilege access** using IAM and Managed Identity
-* Solved ACR authentication using **control-plane + data-plane RBAC**
-
----
-
-### 🔹 Infrastructure Automation
-
-* Built complete environments using **Terraform (AzureRM + AWS providers)**
-* Resolved **state drift and dependency cycles** in production workflows
+### **Database**
+- **AWS DynamoDB**
+- Stores job listings ingested from external APIs
+- Designed for low‑latency reads and cost‑efficient scaling
 
 ---
 
-### 🔹 Debugging & Reliability
+## 🧩 Key Features
 
-* Diagnosed and fixed:
-
-  * Container image pull failures (`UNAUTHORIZED`)
-  * Terraform dependency cycles
-  * Cross-cloud integration issues
-
----
-
-### 🔹 CI/CD Engineering
-
-* Automated:
-
-  * Docker image build
-  * Push to Azure Container Registry
-  * Terraform deployment
-  * Container App updates
+- 🔍 Search for jobs by keyword  
+- 📄 Clean job cards with direct links to application pages  
+- ☁️ Multi‑cloud deployment (Azure + AWS)  
+- ⚡ FastAPI backend with proper CORS configuration  
+- 🗄️ DynamoDB storage for job listings  
+- 🌐 S3‑hosted frontend with instant global availability  
+- 🛠️ Debug‑driven development: revision management, CORS resolution, container restarts, and API integration  
+- 🧪 Local + staging environment parity  
 
 ---
 
-## 🚀 Deployment (Quick Start)
+## 🧠 Engineering Challenges Solved
 
-```bash
-# AWS Infrastructure
-cd terraform/aws
-terraform init && terraform apply
+This project intentionally demonstrates real DevOps problem‑solving:
 
-# Azure Infrastructure
-cd terraform/azure
-terraform init && terraform apply
+### **1. Azure Container Apps Revision Management**
+- Identified and resolved unhealthy revisions  
+- Switched traffic between revisions  
+- Restarted and deployed new revisions during debugging  
 
-# Build & Push API Image
-az acr build -t job-api:v1 -r jobaggregatoracr .
+### **2. CORS Failures Between S3 and Azure**
+- Diagnosed missing CORS headers  
+- Fixed duplicate FastAPI app instances  
+- Corrected middleware placement  
+- Ensured correct app entrypoint for Azure runtime  
 
-# View Logs
-az containerapp logs show \
-  --name job-api \
-  --resource-group rg-devops-job-aggregator \
-  --follow
-```
+### **3. Frontend → Backend Integration**
+- Implemented safe fetch logic with sanitization  
+- Added loading/error states  
+- Ensured correct API routing and query handling  
 
----
-
-## 📂 Project Structure
-
-```text
-.
-├── api/                     # Backend API
-├── frontend/                # Frontend UI
-├── Dockerfile               # Container build config
-├── terraform/
-│   ├── aws/                 # AWS infrastructure
-│   └── azure/               # Azure infrastructure
-├── .github/workflows/       # CI/CD pipelines
-└── README.md
-```
+### **4. Multi‑Cloud Deployment**
+- Backend on Azure  
+- Database on AWS  
+- Frontend on AWS S3  
+- Clean separation of environments (local, staging, production)  
 
 ---
 
-## 🧠 Skills Demonstrated
+## 📦 Project Structure
 
-* Multi-cloud architecture design (AWS + Azure)
-* Terraform (Infrastructure-as-Code)
-* Docker & container orchestration
-* Azure Container Apps & AWS Lambda
-* Identity & access management (IAM, Managed Identity, RBAC)
-* CI/CD with GitHub Actions
-* Debugging distributed cloud systems
+/frontend
+├── index.html
+├── style.css
+└── app.js
+/backend
+├── main.py
+├── requirements.txt
+└── Dockerfile
+
+
+---
+
+## 🔧 Backend Endpoints
+
+### `GET /health`
+Returns service status.
+
+### `GET /jobs?query=keyword`
+Returns job listings filtered by keyword.
+
+---
+
+## 🚀 Deployment Summary
+
+### **Azure Container Apps**
+- Containerized FastAPI backend  
+- Environment variables for AWS credentials  
+- Revision‑based deployment  
+- Ingress enabled for public API access  
+
+### **AWS DynamoDB**
+- Single table for job listings  
+- On‑demand capacity mode  
+
+### **AWS S3**
+- Static website hosting enabled  
+- Public bucket policy  
+- CORS configuration for API access  
 
 ---
 
 ## 📈 Future Enhancements
 
-* Add job filtering (location, role, remote)
-* Implement autoscaling policies
-* Add monitoring (Azure Monitor + CloudWatch)
-* Introduce caching layer (Redis)
-* Add user authentication
+- Experience‑based filtering (e.g., ≤ 2 years experience)  
+- Automatic job page parsing  
+- Tailored application responses generated per job  
+- One‑click “Apply” workflow  
+- CI/CD pipeline for S3 + Azure deployments  
+- CloudFront CDN integration (optional)  
 
 ---
 
-## 📌 Why This Project Matters
+## 🧑‍💻 Author
 
-This project reflects **real-world DevOps challenges and solutions**, including:
-
-* Designing **secure, scalable cloud systems**
-* Managing **cross-cloud infrastructure**
-* Automating deployments end-to-end
-* Debugging complex distributed environments
-
----
-
-## 👤 Olaitan Soyoye
-
+Olaitan 
+DevOps & Cloud Engineer  
+Focused on multi‑cloud architecture, automation, and production‑grade deployments.
 
