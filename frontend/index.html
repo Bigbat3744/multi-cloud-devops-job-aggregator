@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Multi-Cloud DevOps Job Aggregator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="logo-mark" aria-hidden="true">MC</div>
+      <div>
+        <h1>Multi-Cloud Job Radar</h1>
+        <p>Find DevOps, cloud, security, and engineering roles in one stream.</p>
+      </div>
+    </header>
+
+    <main>
+      <section class="search-section" aria-label="Search jobs">
+        <label for="search-input" class="sr-only">Search by keyword</label>
+        <div class="search-row">
+          <input
+            id="search-input"
+            type="text"
+            placeholder="Search by role, company, or keyword..."
+            autocomplete="off"
+          />
+          <button id="search-btn" type="button">Search</button>
+        </div>
+      </section>
+
+      <section class="filters-section" aria-label="Job filters">
+        <div class="filter-group">
+          <h2>Role Type</h2>
+          <div class="chip-row" data-filter-group="role">
+            <button type="button" class="chip active" data-value="all" aria-pressed="true">All</button>
+            <button type="button" class="chip" data-value="devops" aria-pressed="false">DevOps</button>
+            <button type="button" class="chip" data-value="cloud" aria-pressed="false">Cloud</button>
+            <button type="button" class="chip" data-value="software" aria-pressed="false">Software Eng</button>
+            <button type="button" class="chip" data-value="data" aria-pressed="false">Data/ML</button>
+            <button type="button" class="chip" data-value="security" aria-pressed="false">Security</button>
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h2>Seniority</h2>
+          <div class="chip-row" data-filter-group="seniority">
+            <button type="button" class="chip active" data-value="all" aria-pressed="true">All</button>
+            <button type="button" class="chip" data-value="junior" aria-pressed="false">Junior</button>
+            <button type="button" class="chip" data-value="mid" aria-pressed="false">Mid-level</button>
+            <button type="button" class="chip" data-value="expert" aria-pressed="false">Expert</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="results-section" aria-live="polite">
+        <div class="results-header">
+          <p id="results-count">0 roles found</p>
+        </div>
+        <div id="results-grid" class="results-grid"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Built for multi-cloud DevOps job discovery.</p>
+    </footer>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
