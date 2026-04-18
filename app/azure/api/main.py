@@ -1,19 +1,24 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 import boto3
 import os
 
-from fastapi.middleware.cors import CORSMiddleware
+app = FastAPI()
 
+# ============================
+# CORS (Correct placement)
+# ============================
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # allow all origins for now
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app = FastAPI()
-
+# ============================
+# DynamoDB
+# ============================
 dynamodb = boto3.resource(
     "dynamodb",
     region_name="eu-west-1",
@@ -23,6 +28,9 @@ dynamodb = boto3.resource(
 
 table = dynamodb.Table("job-aggregator-jobs")
 
+# ============================
+# Routes
+# ============================
 @app.get("/health")
 def health():
     return {"status": "ok", "service": "azure-job-api"}
