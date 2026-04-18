@@ -35,8 +35,12 @@ table = dynamodb.Table("job-aggregator-jobs")
 def health():
     return {"status": "ok", "service": "azure-job-api"}
 
-@app.get("/jobs")
-def get_jobs():
-    response = table.scan()
-    return response.get("Items", [])
+from fastapi import Query
 
+@app.get("/jobs")
+def get_jobs(query: str = Query(default="")):
+    response = table.scan()
+    items = response.get("Items", [])
+    if query:
+        items = [j for j in items if query.lower() in j.get("title", "").lower()]
+    return items
