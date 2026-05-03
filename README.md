@@ -1,3 +1,14 @@
+# 🌐 Multi-Cloud Job Aggregator
+
+[![Azure](https://img.shields.io/badge/Azure-Container_Apps-blue?logo=microsoft-azure)](https://azure.microsoft.com)
+[![AWS](https://img.shields.io/badge/AWS-DynamoDB_+_S3-orange?logo=amazon-aws)](https://aws.amazon.com)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green?logo=fastapi)](https://fastapi.tiangolo.com)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-success)](http://job-aggregator-frontend.s3-website-eu-west-1.amazonaws.com)
+
+> **Production-grade multi-cloud job aggregation platform**
+
+**[Live Demo](http://job-aggregator-frontend.s3-website-eu-west-1.amazonaws.com)** | **[Architecture](#-architecture)** | **[Challenges Solved](#-engineering-challenges-solved)**
+
 # 🌐 Multi‑Cloud Job Aggregator — Azure Container Apps + AWS DynamoDB + S3 Frontend
 
 A production‑grade, multi‑cloud job aggregation platform designed and built to demonstrate real DevOps engineering capability.  
@@ -15,6 +26,32 @@ The architecture is intentionally multi‑cloud to reflect modern distributed sy
 ---
 
 ## 🏗️ Architecture
+
+┌─────────────────────────────────────────────────────────────┐
+│                      User's Browser                          │
+└────────────────────────┬────────────────────────────────────┘
+│
+▼
+┌───────────────────────────────┐
+│   Frontend (AWS S3)           │
+│   - Static HTML/CSS/JS        │
+│   - CORS-enabled              │
+└───────────────┬───────────────┘
+│ HTTPS
+▼
+┌───────────────────────────────┐
+│   Backend (Azure)             │
+│   - Azure Container Apps      │
+│   - FastAPI                   │
+│   - CORS middleware           │
+└───────────────┬───────────────┘
+│ AWS SDK
+▼
+┌───────────────────────────────┐
+│   Database (AWS)              │
+│   - DynamoDB                  │
+│   - Job listings storage      │
+└───────────────────────────────┘
 
 ### **Frontend**
 - Static HTML/CSS/JavaScript
@@ -119,6 +156,65 @@ Returns job listings filtered by keyword.
 - CORS configuration for API access  
 
 ---
+
+### Test the Live App
+
+Visit: **http://job-aggregator-frontend.s3-website-eu-west-1.amazonaws.com**
+
+Search for jobs by keyword (e.g., "DevOps", "Cloud Engineer")
+
+### API Usage
+
+```bash
+# Health check
+curl https://YOUR_AZURE_APP.azurecontainerapps.io/health
+
+# Search jobs
+curl "https://YOUR_AZURE_APP.azurecontainerapps.io/jobs?query=devops"
+```
+
+### Local Development
+
+```bash
+# Clone repository
+git clone https://github.com/Bigbat3744/multi-cloud-devops-job-aggregator
+cd multi-cloud-devops-job-aggregator
+
+# Run backend locally
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --reload
+
+# Access at http://localhost:8000
+```
+````
+
+## 🛠️ Technology Stack
+
+| Layer | Technology | Purpose |
+|-------|-----------|---------|
+| **Frontend** | HTML/CSS/JavaScript | User interface |
+| **Hosting** | AWS S3 Static Website | Global content delivery |
+| **Backend** | FastAPI (Python) | REST API server |
+| **Compute** | Azure Container Apps | Serverless container hosting |
+| **Database** | AWS DynamoDB | NoSQL job storage |
+| **Security** | CORS, AWS IAM | Cross-origin & access control |
+| **Deployment** | Docker, Azure CLI, AWS CLI | Container & cloud deployment |
+````
+
+## 💰 Cost Analysis
+
+**Monthly Operating Cost:** ~$5-10
+
+| Service | Usage | Cost |
+|---------|-------|------|
+| Azure Container Apps | Serverless, scales to zero | $0-5 (free tier: 180,000 vCPU-seconds) |
+| AWS DynamoDB | On-demand, <1GB data | $0-2 (25 GB free tier) |
+| AWS S3 | Static hosting, <5GB | $0-1 (5 GB free tier) |
+
+**Total:** Minimal cost with smart architecture choices
+````
+
 
 ## 📈 Future Enhancements
 
