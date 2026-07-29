@@ -7,7 +7,7 @@
 
 > **Production-grade multi-cloud job aggregation platform**
 
-**[Live Demo](http://job-aggregator-frontend.s3-website-eu-west-1.amazonaws.com)** | **[Architecture](#-architecture)** | **[Challenges Solved](#-engineering-challenges-solved)**
+**[Architecture](#-architecture)** | **[Challenges Solved](#-engineering-challenges-solved)** — *(live demo currently paused, see below)*
 
 # 🌐 Multi‑Cloud Job Aggregator — Azure Container Apps + AWS DynamoDB + S3 Frontend
 
@@ -157,11 +157,16 @@ Returns job listings filtered by keyword.
 
 ---
 
-### Test the Live App
+### Run It Yourself (Live Demo Currently Paused)
 
-Visit: **http://job-aggregator-frontend.s3-website-eu-west-1.amazonaws.com**
+The Azure backend was decommissioned after trial credits expired — a real example of the cost-management tradeoffs that come with multi-cloud deployments (Azure trial subscriptions lock after ~30 days regardless of whether usage stayed within free-tier limits). Run the full stack locally in under 5 minutes:
 
-Search for jobs by keyword (e.g., "DevOps", "Cloud Engineer")
+\`\`\`
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --reload
+# open frontend/index.html in your browser, pointed at http://localhost:8000
+\`\`\`
 
 ### API Usage
 
